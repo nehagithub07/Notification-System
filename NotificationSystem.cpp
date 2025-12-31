@@ -46,3 +46,17 @@ class SignatureDecorator: public INotificationDecorator {
         return notify->getContent() + "\n-- " + signature + "\n\n";
     }
 };
+
+class IObserver {
+public:
+   virtual void update() const = 0;
+   virtual ~ IObserver() {}
+};
+
+class IObervable {
+    public:
+    virtual void add(IObserver* o)  = 0;
+    virtual void dremove(IObserver r) = 0;
+    virtual void notifyObservers() = 0;
+};
+
