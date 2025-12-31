@@ -53,10 +53,52 @@ public:
    virtual ~ IObserver() {}
 };
 
-class IObervable {
+class IObservable {
     public:
-    virtual void add(IObserver* o)  = 0;
-    virtual void dremove(IObserver r) = 0;
+    virtual void addObserver(IObserver* o)  = 0;
+    virtual void removeObserver(IObserver* r) = 0;
     virtual void notifyObservers() = 0;
+};
+
+  
+class NotificationObservable:public IObservable {
+private:
+    vector<IObserver*> observers;
+    INotification* currNotification;
+public:
+    NotificationObservable() {
+        currNotification = nullptr;
+    }
+    void addObserver(IObserver* obs) override {
+        observers.push_back(obs);   
+    }
+    void removeObserver(IObserver* r) override {
+        observers.erase(remove(observers.begin(), observers.end(), r), observers.end());
+    }
+
+    void notifyObservers() override {
+        for(unsigned int i=0; i<observers.size(); i++) {
+            observers[i]->update();
+        }
+    }
+    void setNotification(INotification* n) {
+        if(currNotification != nullptr) {
+            delete currNotification;
+        }
+        currNotification = n;
+        notifyObservers();
+    }
+    INotification* getNotification() {
+        return currNotification;
+    }
+
+    string getNotificationContent() {
+        return currNotification->getContent();
+    }
+    ~NotificationObservable() {
+        if(currNotification != NULL) {
+            delete currNotification;
+        }
+    }
 };
 
